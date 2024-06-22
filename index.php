@@ -44,8 +44,8 @@
                 <thead class="table-dark">
                     <tr>
                         <th>ID</th>
-                        <th>Name</th>
-                        <th>Email</th>
+                        <th>Username</th>
+                        <th>Password</th>
                     </tr>
                 </thead>
                 <tbody>
