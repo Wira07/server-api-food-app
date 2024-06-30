@@ -1,10 +1,49 @@
+<?php
+include 'koneksi.php';
+
+if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['id'])) {
+    $id = $_GET['id'];
+
+    // Ambil data pengguna berdasarkan ID
+    $sql = "SELECT * FROM user WHERE id_user = $id";
+    $result = $koneksi->query($sql);
+
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        $username = $row['username'];
+        $password = $row['password'];
+    } else {
+        echo "User not found";
+        exit();
+    }
+}
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $id = $_POST['id'];
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+
+    // Update data pengguna
+    $sql = "UPDATE user SET username='$username', password='$password' WHERE id_user=$id";
+
+    if ($koneksi->query($sql) === TRUE) {
+        header("Location: index.php");
+        exit();
+    } else {
+        echo "Error updating record: " . $koneksi->error;
+    }
+}
+
+$koneksi->close();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Data</title>
+    <title>Edit User</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <!-- Font Awesome -->
@@ -57,60 +96,29 @@
             <button class="navbar-toggler" type="button" id="sidebarToggle">
                 <i class='bx bx-arrow-back'></i>
             </button>
-            <span class="navbar-brand mb-0 h1">User Data</span>
+            <span class="navbar-brand mb-0 h1">Edit User</span>
         </div>
     </nav>
     <div class="sidebar" id="sidebar">
         <h3 class="text-center text-light">Menu</h3>
-        <a href="admin_password_resets.php">Reset</a>
-        <a href="user_data.php">User Data</a>
+        <a href="index.php">Home</a>
+        <a href="admin_password_resets.php">Reset Password</a>
     </div>
     <div class="content" id="content">
-        <div class="container mt-5 pt-5">
-           
-            <!-- Table Data -->
-            <div class="table-actions mt-4">
-                <i class="fas fa-edit" title="Edit"></i>
-                <i class="fas fa-trash-alt" title="Delete"></i>
-            </div>
-            <table class="table table-striped table-bordered">
-                <!-- Table Head -->
-                <thead class="table-dark">
-                    <tr>
-                        <th>ID</th>
-                        <th>Username</th>
-                        <th>Password</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <!-- Table Body -->
-                <tbody>
-                    <?php
-                    include 'koneksi.php';
-
-                    $sql = "SELECT * FROM user";
-                    $result = $koneksi->query($sql);
-
-                    if ($result->num_rows > 0) {
-                        while ($row = $result->fetch_assoc()) {
-                            echo "<tr>";
-                            echo "<td>" . $row["id_user"] . "</td>";
-                            echo "<td>" . $row["username"] . "</td>";
-                            echo "<td>" . $row["password"] . "</td>";
-                            echo "<td>";
-                            echo "<a href='edit_user.php?id=" . $row["id_user"] . "' class='btn btn-sm btn-warning'>Edit</a> ";
-                            echo "<a href='delete_user.php?id=" . $row["id_user"] . "' class='btn btn-sm btn-danger'>Delete</a>";
-                            echo "</td>";
-                            echo "</tr>";
-                        }
-                    } else {
-                        echo "<tr><td colspan='4' class='text-center'>No users found</td></tr>";
-                    }
-
-                    $koneksi->close();
-                    ?>
-                </tbody>
-            </table>
+        <div class="container mt-5">
+            <h1>Edit User</h1>
+            <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+                <input type="hidden" name="id" value="<?php echo $id; ?>">
+                <div class="mb-3">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" class="form-control" id="username" name="username" value="<?php echo $username; ?>" required>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password" name="password" value="<?php echo $password; ?>" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Update</button>
+            </form>
         </div>
     </div>
     <!-- Bootstrap JS Bundle with Popper -->

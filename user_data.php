@@ -47,6 +47,9 @@
 
         .content {
             transition: 0.5s;
+            margin-left: 250px;
+            /* Adjusted to accommodate sidebar */
+            padding: 20px;
         }
     </style>
 </head>
@@ -62,57 +65,30 @@
     </nav>
     <div class="sidebar" id="sidebar">
         <h3 class="text-center text-light">Menu</h3>
-        <a href="admin_password_resets.php">Reset</a>
-        <a href="user_data.php">User Data</a>
+        <a href="index.php">Home</a>
+        <a href="admin_password_resets.php">Reset Password</a>
     </div>
     <div class="content" id="content">
-        <div class="container mt-5 pt-5">
-           
-            <!-- Table Data -->
-            <div class="table-actions mt-4">
-                <i class="fas fa-edit" title="Edit"></i>
-                <i class="fas fa-trash-alt" title="Delete"></i>
-            </div>
-            <table class="table table-striped table-bordered">
-                <!-- Table Head -->
-                <thead class="table-dark">
-                    <tr>
-                        <th>ID</th>
-                        <th>Username</th>
-                        <th>Password</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <!-- Table Body -->
-                <tbody>
-                    <?php
-                    include 'koneksi.php';
+        <div class="container mt-5">
+            <h1 class="text-center mb-4">User Data</h1>
 
-                    $sql = "SELECT * FROM user";
-                    $result = $koneksi->query($sql);
-
-                    if ($result->num_rows > 0) {
-                        while ($row = $result->fetch_assoc()) {
-                            echo "<tr>";
-                            echo "<td>" . $row["id_user"] . "</td>";
-                            echo "<td>" . $row["username"] . "</td>";
-                            echo "<td>" . $row["password"] . "</td>";
-                            echo "<td>";
-                            echo "<a href='edit_user.php?id=" . $row["id_user"] . "' class='btn btn-sm btn-warning'>Edit</a> ";
-                            echo "<a href='delete_user.php?id=" . $row["id_user"] . "' class='btn btn-sm btn-danger'>Delete</a>";
-                            echo "</td>";
-                            echo "</tr>";
-                        }
-                    } else {
-                        echo "<tr><td colspan='4' class='text-center'>No users found</td></tr>";
-                    }
-
-                    $koneksi->close();
-                    ?>
-                </tbody>
-            </table>
+            <!-- Form Tambah Data -->
+            <form action="process_user.php" method="post" class="border p-4 rounded shadow-sm">
+                <div class="mb-3">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" class="form-control" id="username" name="username" required>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password" name="password" required>
+                </div>
+                <div class="text">
+                    <button type="submit" class="btn btn-primary">Add User</button>
+                </div>
+            </form>
         </div>
     </div>
+
     <!-- Bootstrap JS Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script>
